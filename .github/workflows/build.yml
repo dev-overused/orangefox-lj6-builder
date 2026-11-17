@@ -35,9 +35,11 @@ jobs:
           # Branch fox_12.1 is no longer in the OrangeFox manifests; the official
           # sync script inits the twrp-12.1 minimal manifest, patches it and clones
           # OrangeFox bootable/recovery + vendor/recovery itself.
-          wget -q https://gitlab.com/OrangeFox/sync/-/raw/master/orangefox_sync.sh -O /tmp/orangefox_sync.sh
-          chmod +x /tmp/orangefox_sync.sh
-          /tmp/orangefox_sync.sh --branch 12.1 --path "$HOME/ofox"
+          # NOTE: the script looks for patches/ relative to $PWD, so clone the
+          # whole sync repo and run it from there (do NOT run it from /tmp).
+          git clone --depth=1 https://gitlab.com/OrangeFox/sync.git "$HOME/fox-sync"
+          cd "$HOME/fox-sync"
+          ./orangefox_sync.sh --branch 12.1 --path "$HOME/ofox"
           ls -l ~/ofox/bootable/recovery ~/ofox/vendor/recovery
 
       - name: Clone Device & Common Trees
