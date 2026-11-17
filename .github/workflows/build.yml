@@ -48,6 +48,12 @@ jobs:
           git clone -b fox_12.1-tranos16 https://github.com/Nade-is-not-a-dev/ofrp-device-tecno_TECNO-LJ6.git device/tecno/TECNO-LJ6
           git clone -b fox_12.1-tranos15 https://github.com/transsion-mt6789-recovery/twrp-device_transsion_mt6789-common.git device/transsion/mt6789-common
 
+      - name: Patch device vendorsetup.sh (guard gflags clone)
+        run: |
+          cd ~/ofox
+          sed -i 's|git clone https://android.googlesource.com/platform/external/gflags/ -b android-12.1.0_r4 external/gflags|if [ ! -d external/gflags ]; then git clone https://android.googlesource.com/platform/external/gflags/ -b android-12.1.0_r4 external/gflags; fi|' device/tecno/TECNO-LJ6/vendorsetup.sh
+          grep -n "gflags" device/tecno/TECNO-LJ6/vendorsetup.sh
+
       - name: Compile OrangeFox vendor_boot.img & Zip
         run: |
           cd ~/ofox
