@@ -72,8 +72,10 @@ jobs:
       - name: Copy artifacts to workspace
         run: |
           mkdir -p $GITHUB_WORKSPACE/artifacts
-          cp -v ~/ofox/out/target/product/LJ6/vendor_boot.img $GITHUB_WORKSPACE/artifacts/ || true
-          cp -v ~/ofox/out/target/product/LJ6/OrangeFox*.zip $GITHUB_WORKSPACE/artifacts/ || true
+          cp -v ~/ofox/out/target/product/TECNO-LJ6/OrangeFox-R12*_LJ6.img $GITHUB_WORKSPACE/artifacts/ || true
+          cp -v ~/ofox/out/target/product/TECNO-LJ6/OrangeFox-R12*_LJ6.img.md5 $GITHUB_WORKSPACE/artifacts/ || true
+          cp -v ~/ofox/out/target/product/TECNO-LJ6/OrangeFox-R12*_LJ6.zip $GITHUB_WORKSPACE/artifacts/ || true
+          cp -v ~/ofox/out/target/product/TECNO-LJ6/OrangeFox-R12*_LJ6.zip.md5 $GITHUB_WORKSPACE/artifacts/ || true
           ls -l $GITHUB_WORKSPACE/artifacts
 
       - name: Upload Artifacts
@@ -81,6 +83,8 @@ jobs:
         with:
           name: OrangeFox-TECNO-LJ6-HiOS16
           path: |
-            artifacts/vendor_boot.img
+            artifacts/OrangeFox*.img
+            artifacts/OrangeFox*.img.md5
             artifacts/OrangeFox*.zip
-          if-no-files-found: warn
+            artifacts/OrangeFox*.zip.md5
+          if-no-files-found: error
