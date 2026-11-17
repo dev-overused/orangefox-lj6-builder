@@ -61,8 +61,10 @@ jobs:
           export ALLOW_MISSING_DEPENDENCIES=true
           export FOX_BUILD_DEVICE=LJ6
           export LC_ALL="C"
-          source build/envsetup.sh || { echo "!! envsetup FAILED (rc=$?)"; exit 1; }
-          echo "== envsetup OK =="
+          # NOTE: OrangeFox's patched envsetup.sh returns rc=1 by design
+          # (orangefox_envsetup's last [ -s ] test), this is NOT a failure.
+          source build/envsetup.sh
+          echo "== envsetup done (rc=$?) =="
           lunch twrp_LJ6-eng || { echo "!! lunch FAILED (rc=$?)"; exit 1; }
           echo "== lunch OK =="
           mka adbd vendorbootimage || { echo "!! BUILD FAILED (rc=$?)"; exit 1; }
