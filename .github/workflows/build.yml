@@ -71,20 +71,23 @@ jobs:
 
       - name: Copy artifacts to workspace
         run: |
+          set +e
           mkdir -p $GITHUB_WORKSPACE/artifacts
-          cp -v ~/ofox/out/target/product/TECNO-LJ6/OrangeFox-R12*_LJ6.img $GITHUB_WORKSPACE/artifacts/ || true
-          cp -v ~/ofox/out/target/product/TECNO-LJ6/OrangeFox-R12*_LJ6.img.md5 $GITHUB_WORKSPACE/artifacts/ || true
-          cp -v ~/ofox/out/target/product/TECNO-LJ6/OrangeFox-R12*_LJ6.zip $GITHUB_WORKSPACE/artifacts/ || true
-          cp -v ~/ofox/out/target/product/TECNO-LJ6/OrangeFox-R12*_LJ6.zip.md5 $GITHUB_WORKSPACE/artifacts/ || true
-          ls -l $GITHUB_WORKSPACE/artifacts
+          PROD=~/ofox/out/target/product/TECNO-LJ6
+          echo "== contents of $PROD =="
+          ls -l $PROD
+          cd $PROD
+          for f in OrangeFox*.img OrangeFox*.img.md5 OrangeFox*.zip OrangeFox*.zip.md5 vendor_boot.img; do
+            [ -e "$f" ] && cp -v "$f" $GITHUB_WORKSPACE/artifacts/
+          done
+          N=$(ls -1 $GITHUB_WORKSPACE/artifacts | wc -l)
+          echo "== copied $N artifact(s) =="
+          [ "$N" -eq 0 ] && { echo "!! No artifacts produced"; exit 1; }
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: OrangeFox-TECNO-LJ6-HiOS16
           path: |
-            artifacts/OrangeFox*.img
-            artifacts/OrangeFox*.img.md5
-            artifacts/OrangeFox*.zip
-            artifacts/OrangeFox*.zip.md5
+            artifacts/*
           if-no-files-found: error
